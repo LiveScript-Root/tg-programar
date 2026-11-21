@@ -1,0 +1,37 @@
+﻿name: probar
+
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: publicar
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  enviar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Enviar uno
+        env:
+          BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
+          SEGUNDOS: "1.5"
+          MAX_ENVIOS: "1"
+        run: python nube.py --ignorar-hora
+      - name: Guardar estado
+        run: |
+          git config user.name "publicador"
+          git config user.email "publicador@users.noreply.github.com"
+          git add -A
+          git commit -m "estado $(date -u +%F_%T)" || echo "sin cambios"
+          git pull --rebase origin main
+          git push origin HEAD:main

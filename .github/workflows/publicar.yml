@@ -9,6 +9,10 @@ on:
         description: "Solo mostrar, no enviar"
         type: boolean
         default: false
+      ignorar_hora:
+        description: "Listar todo sin mirar la hora"
+        type: boolean
+        default: true
 
 concurrency:
   group: publicar
@@ -23,6 +27,8 @@ jobs:
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: main
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
@@ -30,12 +36,12 @@ jobs:
         env:
           BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
           SEGUNDOS: "1.5"
-        run: python nube.py ${{ inputs.simular && '--simular' || '' }}
+        run: python nube.py ${{ inputs.simular && '--simular' || '' }} ${{ inputs.ignorar_hora && '--ignorar-hora' || '' }}
       - name: Guardar estado
         run: |
           git config user.name "publicador"
           git config user.email "publicador@users.noreply.github.com"
           git add estado.json
           git diff --cached --quiet && echo "sin cambios" || git commit -m "estado $(date -u +%F_%T)"
-          git pull --rebase --autostash
-          git push
+          git pull --rebase origin main
+          git push origin HEAD:main

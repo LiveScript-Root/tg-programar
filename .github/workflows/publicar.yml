@@ -1,4 +1,4 @@
-name: publicar
+﻿name: publicar
 
 on:
   schedule:
@@ -13,6 +13,9 @@ on:
         description: "Listar todo sin mirar la hora"
         type: boolean
         default: true
+      max_envios:
+        description: "Tope de envios en esta corrida"
+        default: "200"
 
 concurrency:
   group: publicar
@@ -36,13 +39,11 @@ jobs:
         env:
           BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
           SEGUNDOS: "1.5"
+          MAX_ENVIOS: ${{ inputs.max_envios || '200' }}
         run: python nube.py ${{ inputs.simular && '--simular' || '' }} ${{ inputs.ignorar_hora && '--ignorar-hora' || '' }}
       - name: Preparar git
         run: |
           set -x
-          git remote -v
-          git status --short
-          git branch -vv
           git config user.name "publicador"
           git config user.email "publicador@users.noreply.github.com"
       - name: Commit estado

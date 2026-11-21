@@ -1,0 +1,9 @@
+config.json
+cola.db
+estado.json
+registro.log
+PAUSA.flag
+revision.html
+__pycache__/
+*.pyc
+.vscode/

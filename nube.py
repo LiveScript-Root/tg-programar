@@ -109,6 +109,7 @@ def main():
     if not TOKEN:
         sys.exit("Falta BOT_TOKEN en el entorno")
     estado = cargar_estado()
+    guardar_estado(estado)
     ahora = datetime.now(timezone.utc)
     lista, enviados, fallos = items(), 0, 0
 

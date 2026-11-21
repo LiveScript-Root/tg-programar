@@ -1,4 +1,4 @@
-﻿name: publicar
+name: publicar
 
 on:
   schedule:
@@ -48,7 +48,7 @@ jobs:
       - name: Commit estado
         run: |
           set -x
-          git add estado.json
+          git add -A
           git commit -m "estado $(date -u +%F_%T)" || echo "sin cambios"
       - name: Push estado
         run: |

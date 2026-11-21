@@ -1,4 +1,4 @@
-﻿name: publicar
+name: publicar
 
 on:
   schedule:
@@ -12,7 +12,7 @@ on:
       ignorar_hora:
         description: "Listar todo sin mirar la hora"
         type: boolean
-        default: true
+        default: false
       max_envios:
         description: "Tope de envios en esta corrida"
         default: "200"
